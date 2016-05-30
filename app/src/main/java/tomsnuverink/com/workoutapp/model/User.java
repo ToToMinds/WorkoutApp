@@ -1,5 +1,7 @@
 package tomsnuverink.com.workoutapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.sql.Date;
 
 /**
@@ -11,9 +13,13 @@ public class User {
     private String name;
     private String email;
     private String password;
+    @SerializedName("remember_token")
     private String rememberToken;
+    @SerializedName("api_token")
     private String apiToken;
+    @SerializedName("created_at")
     private Date createdAt;
+    @SerializedName("updated_at")
     private Date updatedAt;
 
     public long getId() {
@@ -78,5 +84,19 @@ public class User {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", rememberToken='" + rememberToken + '\'' +
+                ", apiToken='" + apiToken + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
