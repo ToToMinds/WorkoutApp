@@ -1,6 +1,7 @@
 package tomsnuverink.com.workoutapp.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,8 @@ public class WorkoutAdapter extends ArrayAdapter<Workout> {
         Workout workout = getItem(position);
 
         if (workout != null) {
+            Log.v("WORKOUT", workout.toString());
+
             TextView title = (TextView) v.findViewById(R.id.title);
             TextView dates = (TextView) v.findViewById(R.id.dates);
 
