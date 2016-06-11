@@ -13,15 +13,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,8 +47,8 @@ public class ExerciseFragment extends Fragment {
     private EditText exerciseName;
     private EditText exerciseDescription;
 
-    private Retrofit retrofit;
     private ExerciseService exerciseService;
+    private RetrofitHelper retrofitHelper;
 
     public static final int ADD_EXERCISE = 101;
 
@@ -56,7 +59,8 @@ public class ExerciseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        retrofitHelper = new RetrofitHelper();
+        exerciseService = (ExerciseService) retrofitHelper.build(ExerciseService.class);
         refreshExercises();
     }
 
@@ -64,9 +68,7 @@ public class ExerciseFragment extends Fragment {
      * Refresh the exercises list
      */
     private void refreshExercises() {
-        RetrofitHelper retrofitHelper = new RetrofitHelper();
-        exerciseService = (ExerciseService) retrofitHelper.build(ExerciseService.class);
-        Call<List<Exercise>> exercises = exerciseService.all("5Mu8FxGPjeW0bzCPooR87rolWckt7tl6ZQxjE2NAh5F9lq1X0YcM8uRxKsEO");
+        Call<List<Exercise>> exercises = exerciseService.all(RetrofitHelper.TEST_TOKEN);
         exercises.enqueue(new Callback<List<Exercise>>() {
             @Override
             public void onResponse(Call<List<Exercise>> call, Response<List<Exercise>> response) {
@@ -105,7 +107,46 @@ public class ExerciseFragment extends Fragment {
             }
         });
 
+        exerciseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final Exercise exercise = (Exercise) parent.getItemAtPosition(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Do you want to delete exercise: " + exercise.getName() + "?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                removeExercise(exercise);
+                            }
+                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
+                return false;
+            }
+        });
+
         return view;
+    }
+
+    private void removeExercise(final Exercise exercise) {
+        Call<ResponseBody> call = exerciseService.delete(exercise.getId(), RetrofitHelper.TEST_TOKEN);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(getContext(), exercise.getName() + " deleted!", Toast.LENGTH_SHORT).show();
+                refreshExercises();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.v("EXERCISE_DELETED_FAILED", t.getLocalizedMessage() + "");
+                Toast.makeText(getContext(), exercise.getName() + " isn't deleted!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**

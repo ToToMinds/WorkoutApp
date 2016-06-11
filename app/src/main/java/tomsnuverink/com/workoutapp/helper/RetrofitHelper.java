@@ -11,6 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitHelper {
 
+    public static final String TEST_TOKEN = "5Mu8FxGPjeW0bzCPooR87rolWckt7tl6ZQxjE2NAh5F9lq1X0YcM8uRxKsEO";
     private Retrofit retrofit;
     private final String BASE_URL = "http://workouts.tomsnuverink.com/api/";
 
