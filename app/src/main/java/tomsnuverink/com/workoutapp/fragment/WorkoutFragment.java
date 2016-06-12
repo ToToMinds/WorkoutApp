@@ -1,19 +1,23 @@
 package tomsnuverink.com.workoutapp.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import tomsnuverink.com.workoutapp.R;
+import tomsnuverink.com.workoutapp.activity.WorkoutLocation;
 import tomsnuverink.com.workoutapp.adapter.WorkoutAdapter;
 import tomsnuverink.com.workoutapp.helper.RetrofitHelper;
 import tomsnuverink.com.workoutapp.model.Workout;
@@ -43,6 +47,8 @@ public class WorkoutFragment extends Fragment {
         retrofitHelper = new RetrofitHelper();
         workoutService = (WorkoutService) retrofitHelper.build(WorkoutService.class);
         refreshWorkouts();
+
+
     }
 
     /**
@@ -87,7 +93,23 @@ public class WorkoutFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_workout, container, false);
         workoutListView = (ListView) view.findViewById(R.id.workoutListView);
 
+        workoutListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<Workout> workoutList = new ArrayList<Workout>();
+                for (int i = 0; i < parent.getCount(); i++)
+                    workoutList.add(i, (Workout)parent.getItemAtPosition(i));
+
+                Intent intent = new Intent(getActivity(), WorkoutLocation.class);
+                intent.putExtra("Workouts", workoutList);
+                intent.putExtra("Position", position);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
+
+
 
 }

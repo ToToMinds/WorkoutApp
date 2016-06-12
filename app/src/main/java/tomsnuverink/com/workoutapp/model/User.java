@@ -2,12 +2,13 @@ package tomsnuverink.com.workoutapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * Created by tom on 30-5-2016.
  */
-public class User {
+public class User implements Serializable {
 
     private long id;
     private String name;
