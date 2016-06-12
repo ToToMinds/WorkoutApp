@@ -39,11 +39,11 @@ public class WorkoutAdapter extends ArrayAdapter<Workout> {
         Workout workout = getItem(position);
 
         if (workout != null) {
-            TextView title = (TextView) v.findViewById(R.id.title);
+            TextView title = (TextView) v.findViewById(R.id.exercise_count);
             TextView dates = (TextView) v.findViewById(R.id.dates);
 
             if (title != null) {
-                title.setText(workout.getId() + "");
+                title.setText(workout.getExercises().size() + " exercises");
             }
 
             if (dates != null) {

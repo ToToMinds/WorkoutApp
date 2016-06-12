@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/title" />
+            android:id="@+id/exercise_count" />
 
         <LinearLayout
             android:orientation="horizontal"

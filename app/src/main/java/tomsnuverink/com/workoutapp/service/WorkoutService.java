@@ -4,6 +4,7 @@ package tomsnuverink.com.workoutapp.service;
 import java.util.List;
 
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -23,7 +24,7 @@ public interface WorkoutService {
     Call<List<Workout>> all(@Query("api_token") String apiToken);
 
     @GET("workouts/{id}")
-    Call<List<Workout>> get(@Path("id") int id, @Query("api_token") String apiToken);
+    Call<List<Workout>> get(@Path("id") long id, @Query("api_token") String apiToken);
 
     @POST("workouts")
     Call<Workout> create(@Body Workout workout, @Query("api_token") String apiToken);
@@ -32,6 +33,6 @@ public interface WorkoutService {
     Call<Workout> update(@Body Workout workout, @Query("api_token") String apiToken);
 
     @DELETE("workouts/{id}")
-    Call<Response> delete(@Path("id") int id, @Query("api_token") String apiToken);
+    Call<ResponseBody> delete(@Path("id") long id, @Query("api_token") String apiToken);
 
 }
