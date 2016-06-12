@@ -57,7 +57,7 @@ public class WorkoutLocation extends FragmentActivity implements OnMapReadyCallb
 
         int position = thisIntent.getIntExtra("Position", -1);
         coords = new LatLng(workouts.get(position).getLatitude(), workouts.get(position).getLongitude());
-
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(1.0f));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(coords));
     }
 }

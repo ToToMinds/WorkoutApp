@@ -35,7 +35,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyAY14wjSFldFl6_VfLRRAYW_WI3HTH65I8" />
 
         <activity
             android:name=".activity.WorkoutLocation"

@@ -77,7 +77,7 @@ public class WorkoutFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayList<Workout> workoutList = new ArrayList<Workout>();
                 for (int i = 0; i < parent.getCount(); i++)
-                    workoutList.add(i, (Workout)parent.getItemAtPosition(position));
+                    workoutList.add(i, (Workout)parent.getItemAtPosition(i));
 
                 Intent intent = new Intent(getActivity(), WorkoutLocation.class);
                 intent.putExtra("Workouts", workoutList);
