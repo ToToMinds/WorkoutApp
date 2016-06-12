@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="tomsnuverink.com.workoutapp.activity.AddExerciseActivity">
+    tools:context=".activity.ExerciseActivity">
 
     <EditText
         android:id="@+id/add_exercise_name"

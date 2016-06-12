@@ -1,12 +1,10 @@
 package tomsnuverink.com.workoutapp.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -19,19 +17,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import tomsnuverink.com.workoutapp.R;
-import tomsnuverink.com.workoutapp.activity.AddExerciseActivity;
+import tomsnuverink.com.workoutapp.activity.ExerciseActivity;
 import tomsnuverink.com.workoutapp.adapter.ExerciseAdapter;
 import tomsnuverink.com.workoutapp.helper.RetrofitHelper;
 import tomsnuverink.com.workoutapp.model.Exercise;
@@ -57,6 +50,10 @@ public class ExerciseFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,17 +70,20 @@ public class ExerciseFragment extends Fragment {
         exercises.enqueue(new Callback<List<Exercise>>() {
             @Override
             public void onResponse(Call<List<Exercise>> call, Response<List<Exercise>> response) {
-                Log.v("MAIN_ACTIVITY", response.body().toString());
                 setAdapter(response.body());
             }
 
             @Override
             public void onFailure(Call<List<Exercise>> call, Throwable t) {
-                Log.v("MAIN_ACTIVITY", t.getLocalizedMessage());
+                Log.v("GET_EXERCISES", t.getLocalizedMessage());
             }
         });
     }
 
+    /**
+     *
+     * @param exercises
+     */
     private void setAdapter(List<Exercise> exercises) {
         ExerciseAdapter exerciseAdapter = new ExerciseAdapter(getContext(), R.id.exerciseListView, exercises);
         exerciseListView.setAdapter(exerciseAdapter);
@@ -91,6 +91,13 @@ public class ExerciseFragment extends Fragment {
     }
 
 
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,7 +140,7 @@ public class ExerciseFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Exercise exercise = (Exercise) parent.getItemAtPosition(position);
-                Intent intent = new Intent(getContext(), AddExerciseActivity.class);
+                Intent intent = new Intent(getContext(), ExerciseActivity.class);
                 intent.putExtra("exercise", exercise);
                 intent.putExtra("requestCode", UPDATE_EXERCISE);
                 startActivityForResult(intent, UPDATE_EXERCISE);
@@ -166,7 +173,7 @@ public class ExerciseFragment extends Fragment {
      * @param view
      */
     public void newExercise(View view) {
-        Intent intent = new Intent(getContext(), AddExerciseActivity.class);
+        Intent intent = new Intent(getContext(), ExerciseActivity.class);
         intent.putExtra("requestCode", ADD_EXERCISE);
         startActivityForResult(intent, ADD_EXERCISE);
     }

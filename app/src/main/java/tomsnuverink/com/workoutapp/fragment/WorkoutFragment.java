@@ -26,10 +26,17 @@ public class WorkoutFragment extends Fragment {
     private RetrofitHelper retrofitHelper;
     private WorkoutService workoutService;
 
+    /**
+     * Constructor
+     */
     public WorkoutFragment() {
         // Required empty public constructor
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +45,9 @@ public class WorkoutFragment extends Fragment {
         refreshWorkouts();
     }
 
+    /**
+     *
+     */
     private void refreshWorkouts() {
         Call<List<Workout>> workouts = workoutService.all(RetrofitHelper.TEST_TOKEN);
         workouts.enqueue(new Callback<List<Workout>>() {
@@ -53,12 +63,23 @@ public class WorkoutFragment extends Fragment {
         });
     }
 
+    /**
+     *
+     * @param workouts
+     */
     private void setAdapter(List<Workout> workouts) {
         WorkoutAdapter workoutAdapter = new WorkoutAdapter(getContext(), R.id.workoutListView, workouts);
         workoutListView.setAdapter(workoutAdapter);
         workoutAdapter.notifyDataSetChanged();
     }
 
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return View
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

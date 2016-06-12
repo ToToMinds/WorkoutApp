@@ -25,7 +25,6 @@ public interface WorkoutService {
     @GET("workouts/{id}")
     Call<List<Workout>> get(@Path("id") int id, @Query("api_token") String apiToken);
 
-
     @POST("workouts")
     Call<Workout> create(@Body Workout workout, @Query("api_token") String apiToken);
 

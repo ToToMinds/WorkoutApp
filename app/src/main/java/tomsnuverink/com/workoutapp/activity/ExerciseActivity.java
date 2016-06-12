@@ -3,7 +3,6 @@ package tomsnuverink.com.workoutapp.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -11,14 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
@@ -29,15 +25,13 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import tomsnuverink.com.workoutapp.R;
 import tomsnuverink.com.workoutapp.fragment.ExerciseFragment;
 import tomsnuverink.com.workoutapp.helper.RetrofitHelper;
 import tomsnuverink.com.workoutapp.model.Exercise;
 import tomsnuverink.com.workoutapp.service.ExerciseService;
 
-public class AddExerciseActivity extends AppCompatActivity {
+public class ExerciseActivity extends AppCompatActivity {
 
     private static final int CAPTURE_IMAGE_REQUEST_CODE = 300;
 
@@ -55,7 +49,7 @@ public class AddExerciseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_exercise);
+        setContentView(R.layout.activity_exercise);
 
         exerciseNameEditText = (EditText) findViewById(R.id.add_exercise_name);
         exerciseDescriptionEditText = (EditText) findViewById(R.id.add_exercise_description);
@@ -87,7 +81,12 @@ public class AddExerciseActivity extends AppCompatActivity {
     public void sendRequest(View view) {
         if (requestCode == ExerciseFragment.UPDATE_EXERCISE) {
             doUpdate();
+        } else {
+            doInsert();
         }
+    }
+
+    private void doInsert() {
         String name = exerciseNameEditText.getText().toString();
         String description = exerciseDescriptionEditText.getText().toString();
 
@@ -110,7 +109,7 @@ public class AddExerciseActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Exercise> call, Response<Exercise> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(AddExerciseActivity.this, "Exercise saved", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExerciseActivity.this, "Exercise saved", Toast.LENGTH_SHORT).show();
                     closeActivity(true);
                 }
             }
@@ -118,7 +117,7 @@ public class AddExerciseActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Exercise> call, Throwable t) {
                 Log.v("SAVE_EXERCISE", t.getLocalizedMessage() + "");
-                Toast.makeText(AddExerciseActivity.this, "Exercise not saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ExerciseActivity.this, "Exercise not saved", Toast.LENGTH_SHORT).show();
                 closeActivity(false);
             }
         });
@@ -147,7 +146,7 @@ public class AddExerciseActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Exercise> call, Response<Exercise> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(AddExerciseActivity.this, "Exercise updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ExerciseActivity.this, "Exercise updated", Toast.LENGTH_SHORT).show();
                     closeActivity(true);
                 }
             }
@@ -155,7 +154,7 @@ public class AddExerciseActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Exercise> call, Throwable t) {
                 Log.v("SAVE_EXERCISE", t.getLocalizedMessage() + "");
-                Toast.makeText(AddExerciseActivity.this, "Exercise not updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ExerciseActivity.this, "Exercise not updated", Toast.LENGTH_SHORT).show();
                 closeActivity(false);
             }
         });
