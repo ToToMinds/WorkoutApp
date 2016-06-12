@@ -33,6 +33,7 @@ public interface ExerciseService {
     @POST("exercises")
     Call<Exercise> create(@Part("name") String name, @Part("description") String description, @Part MultipartBody.Part file, @Query("api_token") String apiToken);
 
+    @Multipart
     @PUT("/exercises/{id}")
     Call<Exercise> update(@Path("id") long id, @Part("name") String name, @Part("description") String description, @Part MultipartBody.Part file, @Query("api_token") String apiToken);
 

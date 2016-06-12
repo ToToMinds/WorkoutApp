@@ -3,11 +3,12 @@ package tomsnuverink.com.workoutapp.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Created by tom on 30-5-2016.
  */
-public class Exercise {
+public class Exercise implements Serializable {
 
     private long id;
     private String name;

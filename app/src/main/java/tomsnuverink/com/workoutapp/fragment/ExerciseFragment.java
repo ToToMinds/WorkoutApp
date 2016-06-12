@@ -51,6 +51,7 @@ public class ExerciseFragment extends Fragment {
     private RetrofitHelper retrofitHelper;
 
     public static final int ADD_EXERCISE = 101;
+    public static final int UPDATE_EXERCISE = 102;
 
     public ExerciseFragment() {
         // Required empty public constructor
@@ -99,7 +100,6 @@ public class ExerciseFragment extends Fragment {
         exerciseListView = (ListView) view.findViewById(R.id.exerciseListView);
 
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.add_exercise);
-
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +126,17 @@ public class ExerciseFragment extends Fragment {
                 });
                 builder.show();
                 return false;
+            }
+        });
+
+        exerciseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final Exercise exercise = (Exercise) parent.getItemAtPosition(position);
+                Intent intent = new Intent(getContext(), AddExerciseActivity.class);
+                intent.putExtra("exercise", exercise);
+                intent.putExtra("requestCode", UPDATE_EXERCISE);
+                startActivityForResult(intent, UPDATE_EXERCISE);
             }
         });
 
@@ -156,6 +167,7 @@ public class ExerciseFragment extends Fragment {
      */
     public void newExercise(View view) {
         Intent intent = new Intent(getContext(), AddExerciseActivity.class);
+        intent.putExtra("requestCode", ADD_EXERCISE);
         startActivityForResult(intent, ADD_EXERCISE);
     }
 
