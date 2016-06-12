@@ -1,7 +1,9 @@
 package tomsnuverink.com.workoutapp.fragment;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -19,6 +21,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import tomsnuverink.com.workoutapp.R;
+import tomsnuverink.com.workoutapp.activity.ExerciseActivity;
+import tomsnuverink.com.workoutapp.activity.WorkoutActivity;
 import tomsnuverink.com.workoutapp.adapter.WorkoutAdapter;
 import tomsnuverink.com.workoutapp.helper.RetrofitHelper;
 import tomsnuverink.com.workoutapp.model.Exercise;
@@ -28,7 +32,12 @@ import tomsnuverink.com.workoutapp.service.WorkoutService;
 
 public class WorkoutFragment extends Fragment {
 
+    public static final int ADD_WORKOUT = 301;
+    public static final int UPDATE_WORKOUT = 302;
+
     private ListView workoutListView;
+    private FloatingActionButton floatingActionButton;
+
     private RetrofitHelper retrofitHelper;
     private WorkoutService workoutService;
 
@@ -105,8 +114,16 @@ public class WorkoutFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_workout, container, false);
+
         workoutListView = (ListView) view.findViewById(R.id.workoutListView);
 
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.add_workout);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newWorkout(v);
+            }
+        });
 
         workoutListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -131,6 +148,12 @@ public class WorkoutFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void newWorkout(View v) {
+        Intent intent = new Intent(getContext(), WorkoutActivity.class);
+        intent.putExtra("requestCode", ADD_WORKOUT);
+        startActivityForResult(intent, ADD_WORKOUT);
     }
 
 }
