@@ -1,7 +1,9 @@
 package tomsnuverink.com.workoutapp.activity;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,7 +12,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 import tomsnuverink.com.workoutapp.R;
+import tomsnuverink.com.workoutapp.model.Workout;
 
 public class WorkoutLocation extends FragmentActivity implements OnMapReadyCallback {
 
@@ -40,9 +45,20 @@ public class WorkoutLocation extends FragmentActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        Intent thisIntent = getIntent();
+        ArrayList<Workout> workouts = (ArrayList<Workout>) thisIntent.getSerializableExtra("Workouts");
+        LatLng coords = new LatLng(0, 0);
+        for (int i = 0; i < workouts.size(); i++)
+        {
+            Workout wOut = workouts.get(i);
+            coords = new LatLng(wOut.getLatitude(), wOut.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(coords));
+        }
+
+        int position = thisIntent.getIntExtra("position", -1);
+        if (position != -1)
+            coords = new LatLng(workouts.get(position).getLatitude(), workouts.get(position).getLongitude());
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(coords));
     }
 }

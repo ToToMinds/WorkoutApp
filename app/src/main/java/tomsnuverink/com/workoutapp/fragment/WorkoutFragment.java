@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -74,7 +75,13 @@ public class WorkoutFragment extends Fragment {
         workoutListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<Workout> workoutList = new ArrayList<Workout>();
+                for (int i = 0; i < parent.getCount(); i++)
+                    workoutList.add(i, (Workout)parent.getItemAtPosition(position));
+
                 Intent intent = new Intent(getActivity(), WorkoutLocation.class);
+                intent.putExtra("Workouts", workoutList);
+                intent.putExtra("Position", position);
                 startActivity(intent);
             }
         });

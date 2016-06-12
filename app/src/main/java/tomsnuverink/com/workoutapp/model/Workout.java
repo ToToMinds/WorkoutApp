@@ -1,5 +1,7 @@
 package tomsnuverink.com.workoutapp.model;
 
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -24,6 +26,21 @@ public class Workout implements Serializable {
     @SerializedName("updated_at")
     private Date updatedAt;
     private List<Exercise> exercises;
+    private float latitude;
+    private float longitude;
+
+    public Workout(long id, User user, String date, Date startDate, Date endDate, Date createdAt, Date updatedAt, List<Exercise> exercises, float latitude, float longitude) {
+        this.id = id;
+        this.user = user;
+        this.date = date;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.exercises = exercises;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     public long getId() {
         return id;
@@ -71,6 +88,22 @@ public class Workout implements Serializable {
 
     public void setExercises(List<Exercise> exercises) {
         this.exercises = exercises;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
     }
 
     @Override
