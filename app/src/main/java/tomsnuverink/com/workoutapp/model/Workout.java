@@ -2,6 +2,7 @@ package tomsnuverink.com.workoutapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * Created by tom on 30-5-2016.
  */
-public class Workout {
+public class Workout implements Serializable {
 
     private long id;
     private User user;

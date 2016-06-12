@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 
@@ -48,6 +49,9 @@ public class AddExerciseActivity extends AppCompatActivity {
     private Button saveExerciseButton;
     private File file;
 
+    private Exercise savedExercise;
+    private int requestCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +61,22 @@ public class AddExerciseActivity extends AppCompatActivity {
         exerciseDescriptionEditText = (EditText) findViewById(R.id.add_exercise_description);
         takePictureButton = (Button) findViewById(R.id.take_picture_button);
         saveExerciseButton = (Button) findViewById(R.id.save_exercise_button);
-        imageView = new ImageView(this);
+        imageView = (ImageView) findViewById(R.id.captured_image);
 
+        requestCode = getIntent().getExtras().getInt("requestCode", ExerciseFragment.ADD_EXERCISE);
+        if (requestCode == ExerciseFragment.UPDATE_EXERCISE) {
+            savedExercise = (Exercise) getIntent().getExtras().getSerializable("exercise");
+            if (savedExercise != null) {
+                fillFields(savedExercise);
+            }
+        }
+    }
+
+    private void fillFields(Exercise exercise) {
+        exerciseNameEditText.setText(exercise.getName());
+        exerciseDescriptionEditText.setText(exercise.getDescription());
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.displayImage(exercise.getImagePath(), imageView);
     }
 
     /**
@@ -67,7 +85,9 @@ public class AddExerciseActivity extends AppCompatActivity {
      * @param view
      */
     public void sendRequest(View view) {
-
+        if (requestCode == ExerciseFragment.UPDATE_EXERCISE) {
+            doUpdate();
+        }
         String name = exerciseNameEditText.getText().toString();
         String description = exerciseDescriptionEditText.getText().toString();
 
@@ -78,9 +98,12 @@ public class AddExerciseActivity extends AppCompatActivity {
         RetrofitHelper retrofitHelper = new RetrofitHelper();
         ExerciseService exerciseService = (ExerciseService) retrofitHelper.build(ExerciseService.class);
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        // MultipartBody.Part is used to send also the actual file name
-        MultipartBody.Part image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        MultipartBody.Part image = null;
+        if (file != null) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            // MultipartBody.Part is used to send also the actual file name
+            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        }
 
         Call<Exercise> exerciseCall = exerciseService.create(exercise.getName(), exercise.getDescription(), image, "5Mu8FxGPjeW0bzCPooR87rolWckt7tl6ZQxjE2NAh5F9lq1X0YcM8uRxKsEO");
         exerciseCall.enqueue(new Callback<Exercise>() {
@@ -96,6 +119,43 @@ public class AddExerciseActivity extends AppCompatActivity {
             public void onFailure(Call<Exercise> call, Throwable t) {
                 Log.v("SAVE_EXERCISE", t.getLocalizedMessage() + "");
                 Toast.makeText(AddExerciseActivity.this, "Exercise not saved", Toast.LENGTH_SHORT).show();
+                closeActivity(false);
+            }
+        });
+    }
+
+    private void doUpdate() {
+        String name = exerciseNameEditText.getText().toString();
+        String description = exerciseDescriptionEditText.getText().toString();
+
+        Exercise exercise = savedExercise;
+        exercise.setName(name);
+        exercise.setDescription(description);
+
+        RetrofitHelper retrofitHelper = new RetrofitHelper();
+        ExerciseService exerciseService = (ExerciseService) retrofitHelper.build(ExerciseService.class);
+
+        MultipartBody.Part image = null;
+        if (file != null) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            // MultipartBody.Part is used to send also the actual file name
+            image = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        }
+
+        Call<Exercise> exerciseCall = exerciseService.update(exercise.getId(), exercise.getName(), exercise.getDescription(), image, "5Mu8FxGPjeW0bzCPooR87rolWckt7tl6ZQxjE2NAh5F9lq1X0YcM8uRxKsEO");
+        exerciseCall.enqueue(new Callback<Exercise>() {
+            @Override
+            public void onResponse(Call<Exercise> call, Response<Exercise> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(AddExerciseActivity.this, "Exercise updated", Toast.LENGTH_SHORT).show();
+                    closeActivity(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Exercise> call, Throwable t) {
+                Log.v("SAVE_EXERCISE", t.getLocalizedMessage() + "");
+                Toast.makeText(AddExerciseActivity.this, "Exercise not updated", Toast.LENGTH_SHORT).show();
                 closeActivity(false);
             }
         });
@@ -141,12 +201,8 @@ public class AddExerciseActivity extends AppCompatActivity {
         file = new File(imgDecodableString);
 
         cursor.close();
+        takePictureButton.setText("Change picture");
 
-        ViewGroup viewGroup = (ViewGroup) takePictureButton.getParent();
-        if (viewGroup != null) {
-            viewGroup.removeView(takePictureButton);
-            viewGroup.addView(imageView, 2);
-        }
         // Set the Image in ImageView after decoding the String
         imageView.setImageBitmap(BitmapFactory
                 .decodeFile(imgDecodableString));
