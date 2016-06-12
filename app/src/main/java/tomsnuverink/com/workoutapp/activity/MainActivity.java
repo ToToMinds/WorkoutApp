@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new WorkoutFragment(), "Workouts");
         adapter.addFragment(new ExerciseFragment(), "Exercises");
+        adapter.addFragment(new WorkoutLocation(), "WorkoutsLocation");
         viewPager.setAdapter(adapter);
     }
 

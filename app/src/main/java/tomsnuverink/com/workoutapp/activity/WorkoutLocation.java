@@ -1,10 +1,18 @@
 package tomsnuverink.com.workoutapp.activity;
 
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -12,20 +20,36 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import tomsnuverink.com.workoutapp.R;
 
-public class WorkoutLocation extends FragmentActivity implements OnMapReadyCallback {
+public class WorkoutLocation extends Fragment implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    private SupportMapFragment fragment;
+    private GoogleMap map;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_workout_location);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_workout_location, container, false);
+
+        return v;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FragmentManager fm = getChildFragmentManager();
+        fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+        if (fragment == null) {
+            fragment = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.map, fragment).commit();
+        }
+    }
 
     /**
      * Manipulates the map once available.
@@ -38,11 +62,13 @@ public class WorkoutLocation extends FragmentActivity implements OnMapReadyCallb
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        map = googleMap;
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
+
 }
